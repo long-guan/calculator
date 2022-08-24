@@ -94,18 +94,42 @@ decimal.addEventListener('click', function() {
 const clear = document.querySelector("#clear");
 clear.addEventListener('click', function() {
     input.innerHTML = "";
+    output.innerHTML = "";
 })
 
 const plus = document.querySelector("#plus");
 plus.addEventListener('click', function() {
-    input.innerHTML = input.innerHTML + "+";
+    if (input.innerHTML.length > 2) {
+        input.innerHTML = output.innerHTML + "+";
+        output.innerHTML = "";
+    } else {
+        input.innerHTML = input.innerHTML + "+";
+    }
 })
 
 const equal = document.querySelector("#equal");
 equal.addEventListener('click', function() {
-
+    if (input.innerHTML.indexOf('+') != -1) {
+        output.innerHTML = add(input.innerHTML);
+    } else if (input.innerHTML.indexOf('-') != -1) {
+        output.innerHTML = subtract(input.innerHTML);
+    }
 })
 
 const input = document.querySelector("#input");
 
 const output = document.querySelector("#output");
+
+function add(input) {
+    let plusSignIndex = input.indexOf('+');
+    let num1 = input.slice(0, plusSignIndex);
+    let num2 = input.slice(plusSignIndex + 1)
+    return parseInt(num1) + parseInt(num2);
+}
+
+function subtract(input) {
+    let minusSignIndex = input.indexOf('-');
+    let num1 = input.slice(0, minusSignIndex);
+    let num2 = input.slice(minusSignIndex + 1)
+    return parseInt(num1) - parseInt(num2);
+}
