@@ -73,7 +73,14 @@ three.addEventListener('click', function() {
 
 const minus = document.querySelector("#minus");
 minus.addEventListener('click', function() {
-    input.innerHTML = input.innerHTML + "-";
+    if (input.innerHTML.indexOf('-') != -1) {
+
+    } else if (input.innerHTML.length > 2) {
+        input.innerHTML = output.innerHTML + "-";
+        output.innerHTML = "";
+    } else {
+        input.innerHTML = input.innerHTML + "-";
+    }
 })
 
 const percent = document.querySelector("#percent");
@@ -99,7 +106,10 @@ clear.addEventListener('click', function() {
 
 const plus = document.querySelector("#plus");
 plus.addEventListener('click', function() {
-    if (input.innerHTML.length > 2) {
+    if (checkOperation() == true) {
+        input.innerHTML = evaluateReturn() + "+"
+        output.innerHTML = "";
+    } else if (input.innerHTML.length > 2) {
         input.innerHTML = output.innerHTML + "+";
         output.innerHTML = "";
     } else {
@@ -108,17 +118,36 @@ plus.addEventListener('click', function() {
 })
 
 const equal = document.querySelector("#equal");
-equal.addEventListener('click', function() {
+equal.addEventListener('click', evaluate);
+
+const input = document.querySelector("#input");
+const output = document.querySelector("#output");
+
+function evaluate() {
     if (input.innerHTML.indexOf('+') != -1) {
         output.innerHTML = add(input.innerHTML);
     } else if (input.innerHTML.indexOf('-') != -1) {
         output.innerHTML = subtract(input.innerHTML);
     }
-})
+}
 
-const input = document.querySelector("#input");
+function evaluateReturn() {
+    if (input.innerHTML.indexOf('+') != -1) {
+        return add(input.innerHTML);
+    } else if (input.innerHTML.indexOf('-') != -1) {
+        return subtract(input.innerHTML);
+    }
+}
 
-const output = document.querySelector("#output");
+function checkOperation() {
+    let signs = ['÷','x','-','+'];
+    for (let i = 0; i <= signs.length + 1; i++) {
+        if (input.innerHTML.indexOf(signs[i]) != -1) {
+            console.log('true');
+            return true;
+        }
+    }
+}
 
 function add(input) {
     let plusSignIndex = input.indexOf('+');
