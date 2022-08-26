@@ -1,3 +1,8 @@
+const backspace = document.querySelector('.backspace');
+backspace.addEventListener('click', function() {
+    input.innerHTML = input.innerHTML.slice(0, -1);
+})
+
 const seven = document.querySelector("#seven");
 seven.addEventListener('click', function() {
     input.innerHTML = input.innerHTML + "7";
@@ -73,8 +78,11 @@ three.addEventListener('click', function() {
 
 const minus = document.querySelector("#minus");
 minus.addEventListener('click', function() {
-    if (input.innerHTML.indexOf('-') != -1) {
-
+    if (checkSkip() == true) {
+        // do nothing
+    } else if (checkOperation() == true) {
+        input.innerHTML = evaluateReturn() + "-"
+        output.innerHTML = "";
     } else if (input.innerHTML.length > 2) {
         input.innerHTML = output.innerHTML + "-";
         output.innerHTML = "";
@@ -106,12 +114,16 @@ clear.addEventListener('click', function() {
 
 const plus = document.querySelector("#plus");
 plus.addEventListener('click', function() {
-    if (checkOperation() == true) {
+    if (checkSkip() == true) {
+        // do nothing
+    } else if (checkOperation() == true) {
         input.innerHTML = evaluateReturn() + "+"
         output.innerHTML = "";
     } else if (input.innerHTML.length > 2) {
         input.innerHTML = output.innerHTML + "+";
         output.innerHTML = "";
+    } else if (input.innerHTML.length == "") {
+        // do nothing
     } else {
         input.innerHTML = input.innerHTML + "+";
     }
@@ -139,10 +151,22 @@ function evaluateReturn() {
     }
 }
 
+// returns true if anyu of the signs are inputted
 function checkOperation() {
     let signs = ['÷','x','-','+'];
     for (let i = 0; i <= signs.length + 1; i++) {
         if (input.innerHTML.indexOf(signs[i]) != -1) {
+            console.log('true');
+            return true;
+        }
+    }
+}
+
+// returns true of the last index of the input is a sign
+function checkSkip() {
+    let signs = ['÷','x','-','+'];
+    for (let i = 0; i <= signs.length + 1; i++) {
+        if (input.innerHTML.slice(-1) == signs[i]) {
             console.log('true');
             return true;
         }

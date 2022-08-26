@@ -21,11 +21,33 @@
     justify-content: center;
 }
 
+.inputLineContainer {
+    width: 248px;
+    height: 48px;
+    border-width: 1px;
+    border-color: black;
+    text-align: center;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .lineContainer {
     display: flex;
 }
 
 .square:hover {
     background-color: gray;
+    cursor: pointer;
+}
+
+.backspace {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.backspace:hover {
+    color: red;
     cursor: pointer;
 }
