@@ -20,16 +20,16 @@ nine.addEventListener('click', function() {
 
 const divide = document.querySelector("#divide");
 divide.addEventListener('click', function() {
-    input.innerHTML = input.innerHTML + "÷";
+    inputOperation('÷');
 })
 
 const plusOrMinus = document.querySelector("#plusOrMinus");
 plusOrMinus.addEventListener('click', function() {
-    if (input.innerHTML[0] != "-") {
-        input.innerHTML = "-" + input.innerHTML;
-    } else {
-        input.innerHTML = input.innerHTML.slice(1);
-    }
+    // if (input.innerHTML[0] != "-") {
+    //     input.innerHTML = "-" + input.innerHTML;
+    // } else {
+    //     input.innerHTML = input.innerHTML.slice(1);
+    // }
 })
 
 const four = document.querySelector("#four");
@@ -49,7 +49,7 @@ six.addEventListener('click', function() {
 
 const multiply = document.querySelector("#multiply");
 multiply.addEventListener('click', function() {
-    input.innerHTML = input.innerHTML + "x";
+    inputOperation('x');
 })
 
 const root = document.querySelector("#root");
@@ -78,17 +78,7 @@ three.addEventListener('click', function() {
 
 const minus = document.querySelector("#minus");
 minus.addEventListener('click', function() {
-    if (checkSkip() == true) {
-        // do nothing
-    } else if (checkOperation() == true) {
-        input.innerHTML = evaluateReturn() + "-"
-        output.innerHTML = "";
-    } else if (input.innerHTML.length > 2) {
-        input.innerHTML = output.innerHTML + "-";
-        output.innerHTML = "";
-    } else {
-        input.innerHTML = input.innerHTML + "-";
-    }
+    inputOperation("−");
 })
 
 const percent = document.querySelector("#percent");
@@ -114,19 +104,7 @@ clear.addEventListener('click', function() {
 
 const plus = document.querySelector("#plus");
 plus.addEventListener('click', function() {
-    if (checkSkip() == true) {
-        // do nothing
-    } else if (checkOperation() == true) {
-        input.innerHTML = evaluateReturn() + "+"
-        output.innerHTML = "";
-    } else if (input.innerHTML.length > 2) {
-        input.innerHTML = output.innerHTML + "+";
-        output.innerHTML = "";
-    } else if (input.innerHTML.length == "") {
-        // do nothing
-    } else {
-        input.innerHTML = input.innerHTML + "+";
-    }
+    inputOperation("+");
 })
 
 const equal = document.querySelector("#equal");
@@ -137,23 +115,31 @@ const output = document.querySelector("#output");
 
 function evaluate() {
     if (input.innerHTML.indexOf('+') != -1) {
-        output.innerHTML = add(input.innerHTML);
-    } else if (input.innerHTML.indexOf('-') != -1) {
-        output.innerHTML = subtract(input.innerHTML);
+        output.innerHTML = add();
+    } else if (input.innerHTML.indexOf('−') != -1) {
+        output.innerHTML = subtract();
+    } else if (input.innerHTML.indexOf('x') != -1) {
+        output.innerHTML = multiplication();
+    } else if (input.innerHTML.indexOf('÷') != -1) {
+        output.innerHTML = division();
     }
 }
 
 function evaluateReturn() {
     if (input.innerHTML.indexOf('+') != -1) {
-        return add(input.innerHTML);
-    } else if (input.innerHTML.indexOf('-') != -1) {
-        return subtract(input.innerHTML);
+        return add();
+    } else if (input.innerHTML.indexOf('−') != -1) {
+        return subtract();
+    } else if (input.innerHTML.indexOf('x') != -1) {
+        return multiplication();
+    } else if (input.innerHTML.indexOf('÷') != -1) {
+        return division();
     }
 }
 
-// returns true if anyu of the signs are inputted
+// returns true if any of the signs are inputted
 function checkOperation() {
-    let signs = ['÷','x','-','+'];
+    let signs = ['÷','x','−','+'];
     for (let i = 0; i <= signs.length + 1; i++) {
         if (input.innerHTML.indexOf(signs[i]) != -1) {
             console.log('true');
@@ -164,7 +150,7 @@ function checkOperation() {
 
 // returns true of the last index of the input is a sign
 function checkSkip() {
-    let signs = ['÷','x','-','+'];
+    let signs = ['÷','x','−','+'];
     for (let i = 0; i <= signs.length + 1; i++) {
         if (input.innerHTML.slice(-1) == signs[i]) {
             console.log('true');
@@ -173,16 +159,47 @@ function checkSkip() {
     }
 }
 
-function add(input) {
-    let plusSignIndex = input.indexOf('+');
-    let num1 = input.slice(0, plusSignIndex);
-    let num2 = input.slice(plusSignIndex + 1)
+function add() {
+    let plusSignIndex = input.innerHTML.indexOf('+');
+    let num1 = input.innerHTML.slice(0, plusSignIndex);
+    let num2 = input.innerHTML.slice(plusSignIndex + 1)
     return parseInt(num1) + parseInt(num2);
 }
 
-function subtract(input) {
-    let minusSignIndex = input.indexOf('-');
-    let num1 = input.slice(0, minusSignIndex);
-    let num2 = input.slice(minusSignIndex + 1)
+function subtract() {
+    let minusSignIndex = input.innerHTML.indexOf('−');
+    let num1 = input.innerHTML.slice(0, minusSignIndex);
+    let num2 = input.innerHTML.slice(minusSignIndex + 1)
     return parseInt(num1) - parseInt(num2);
+}
+
+function multiplication() {
+    let minusSignIndex = input.innerHTML.indexOf('x');
+    let num1 = input.innerHTML.slice(0, minusSignIndex);
+    let num2 = input.innerHTML.slice(minusSignIndex + 1)
+    return parseInt(num1) * parseInt(num2);
+}
+
+function division() {
+    let minusSignIndex = input.innerHTML.indexOf('÷');
+    let num1 = input.innerHTML.slice(0, minusSignIndex);
+    let num2 = input.innerHTML.slice(minusSignIndex + 1)
+    return parseInt(num1) / parseInt(num2);
+}
+
+// adds sign if
+function inputOperation(sign) {
+    if (checkSkip() == true) { // won't add sign if there is already a sign in last index of the input
+        // do nothing
+    } else if (checkOperation() == true) { // add sign if there is no sign in the input and evaluates the expression
+        input.innerHTML = evaluateReturn() + sign
+        output.innerHTML = "";
+    } else if (input.innerHTML.length > 2) {
+        input.innerHTML = output.innerHTML + sign;
+        output.innerHTML = "";
+    } else if (input.innerHTML.length == "") {
+        // do nothing
+    } else {
+        input.innerHTML = input.innerHTML + sign;
+    }
 }
