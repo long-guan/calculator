@@ -23,13 +23,25 @@ divide.addEventListener('click', function() {
     inputOperation('÷');
 })
 
+// add negative sign to expression if there is a second number
+// add negative to the single number
 const plusOrMinus = document.querySelector("#plusOrMinus");
 plusOrMinus.addEventListener('click', function() {
-    // if (input.innerHTML[0] != "-") {
-    //     input.innerHTML = "-" + input.innerHTML;
-    // } else {
-    //     input.innerHTML = input.innerHTML.slice(1);
-    // }
+    if (input.innerHTML.length == 0) {
+        input.innerHTML = "-";
+        console.log('check');
+    } else if (checkOperation() == true && input.innerHTML[input.innerHTML.length - 1] >= 0 && input.innerHTML[input.innerHTML.length - 1] <= 9) {
+        // do nothing
+    } else if (checkOperation() == true) {
+        console.log('true');
+        input.innerHTML = input.innerHTML + '-'
+    } else if (input.innerHTML[0] == '-') {
+        input.innerHTML = input.innerHTML.slice(1, input.length);
+        console.log('check');
+    } else if (checkOperation() == false) {
+        console.log('false');
+        input.innerHTML = "-" + input.innerHTML;
+    }
 })
 
 const four = document.querySelector("#four");
@@ -54,10 +66,20 @@ multiply.addEventListener('click', function() {
 
 const root = document.querySelector("#root");
 root.addEventListener('click', function() {
-    if (input.innerHTML[0] != "√") {
+    if (input.innerHTML.length == 0) {
+        input.innerHTML = "√";
+        console.log('check');
+    } else if (checkOperation() == true && input.innerHTML[input.innerHTML.length - 1] >= 0 && input.innerHTML[input.innerHTML.length - 1] <= 9) {
+        // do nothing
+    } else if (checkOperation() == true) {
+        console.log('true');
+        input.innerHTML = input.innerHTML + '√'
+    } else if (input.innerHTML[0] == '√') {
+        input.innerHTML = input.innerHTML.slice(1, input.length);
+        console.log('check');
+    } else if (checkOperation() == false) {
+        console.log('false');
         input.innerHTML = "√" + input.innerHTML;
-    } else {
-        input.innerHTML = input.innerHTML.slice(1);
     }
 })
 
@@ -122,6 +144,9 @@ function evaluate() {
         output.innerHTML = multiplication();
     } else if (input.innerHTML.indexOf('÷') != -1) {
         output.innerHTML = division();
+    } else if (input.innerHTML.indexOf('√') != -1) {
+        console.log('true');
+        output.innerHTML = squareRoot();
     }
 }
 
@@ -146,6 +171,7 @@ function checkOperation() {
             return true;
         }
     }
+    return false;
 }
 
 // returns true of the last index of the input is a sign
@@ -157,6 +183,8 @@ function checkSkip() {
             return true;
         }
     }
+    console.log('false');
+    return false;
 }
 
 function add() {
@@ -187,16 +215,26 @@ function division() {
     return parseInt(num1) / parseInt(num2);
 }
 
+function squareRoot() {
+    if (checkOperation() == false) {
+        let num1 = input.innerHTML.slice(1, (input.innerHTML.length));
+        return Math.sqrt(parseInt(num1));
+    }
+}
+
 // adds sign if
 function inputOperation(sign) {
     if (checkSkip() == true) { // won't add sign if there is already a sign in last index of the input
         // do nothing
-    } else if (checkOperation() == true) { // add sign if there is no sign in the input and evaluates the expression
+    } else if (checkOperation() == true) { // evaluates expressiong and add sign
         input.innerHTML = evaluateReturn() + sign
         output.innerHTML = "";
-    } else if (input.innerHTML.length > 2) {
+    } else if (checkOperation() == false) { // add sign if there is no sign
+        input.innerHTML = input.innerHTML + sign;
+    } else if (input.innerHTML.length >= 2) { // use answer and first number and add sign
         input.innerHTML = output.innerHTML + sign;
         output.innerHTML = "";
+        console.log('running');
     } else if (input.innerHTML.length == "") {
         // do nothing
     } else {
