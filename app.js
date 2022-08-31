@@ -1,6 +1,10 @@
 const backspace = document.querySelector('.backspace');
 backspace.addEventListener('click', function() {
-    input.innerHTML = input.innerHTML.slice(0, -1);
+    if (input.innerHTML.indexOf('<') != -1) {
+        input.innerHTML = input.innerHTML.slice(0, input.innerHTML.indexOf("<"));
+    } else {
+        input.innerHTML = input.innerHTML.slice(0, -1);
+    }
 })
 
 const seven = document.querySelector("#seven");
@@ -30,6 +34,10 @@ plusOrMinus.addEventListener('click', function() {
     if (input.innerHTML.length == 0) {
         input.innerHTML = "-";
         console.log('check');
+    } else if (input.innerHTML.indexOf('<')) { // won't add sign if there is a square in the expression
+        // do nothing
+    } else if (input.innerHTML.indexOf("√") != -1) { // won't add negative sign if there is a square root in the expression
+        // do nothing
     } else if (checkOperation() == true && input.innerHTML[input.innerHTML.length - 1] >= 0 && input.innerHTML[input.innerHTML.length - 1] <= 9) {
         // do nothing
     } else if (checkOperation() == true) {
@@ -103,10 +111,24 @@ minus.addEventListener('click', function() {
     inputOperation("−");
 })
 
-const percent = document.querySelector("#percent");
-// percent.addEventListener('click', function() {
-//     input.innerHTML = input.innerHTML + "÷";
-// })
+const squared = document.querySelector("#squared");
+squared.addEventListener('click', function() {
+    if (input.innerHTML.length == 0) { // don't input sign if nothing in input
+        // do nothing
+    } else if (input.innerHTML.indexOf('√') != -1) { // dont input sign if square root is in
+        // do nothing
+    } else if (checkOperation() == true && input.innerHTML[input.innerHTML.length - 1] >= 0 && input.innerHTML[input.innerHTML.length - 1] <= 9) { // do nothing is there is a sign in expression and the last index is a number
+        // do nothing
+    } else if (checkOperation() == true) { // don't add sign if there is sign
+        // do nothing
+    } else if (input.innerHTML[input.innerHTML.length - 1] == '>') {
+        input.innerHTML = input.innerHTML.slice(0, input.innerHTML.indexOf("<"));
+        console.log('check');
+    } else if (checkOperation() == false) {
+        console.log('false');
+        input.innerHTML = input.innerHTML + "<sup>2</sup>";
+    }
+})
 
 const zero = document.querySelector("#zero");
 zero.addEventListener('click', function() {
@@ -147,6 +169,8 @@ function evaluate() {
     } else if (input.innerHTML.indexOf('√') != -1) {
         console.log('true');
         output.innerHTML = squareRoot();
+    } else if (input.innerHTML.indexOf("<") != -1) {
+        output.innerHTML = squareNum();
     }
 }
 
@@ -159,6 +183,8 @@ function evaluateReturn() {
         return multiplication();
     } else if (input.innerHTML.indexOf('÷') != -1) {
         return division();
+    } else if (input.innerHTML.indexOf('<') != -1) {
+        return squareNum();
     }
 }
 
@@ -216,15 +242,25 @@ function division() {
 }
 
 function squareRoot() {
-    if (checkOperation() == false) {
+    if (checkOperation() == false) { // if square rooting a single number
         let num1 = input.innerHTML.slice(1, (input.innerHTML.length));
         return Math.sqrt(parseInt(num1));
     }
 }
 
-// adds sign if
+function squareNum() {
+    let num = input.innerHTML.slice(0, input.innerHTML.indexOf("<"));
+    console.log(num);
+    return parseInt(num) * parseInt(num);
+}
+
+// adds sign
 function inputOperation(sign) {
     if (checkSkip() == true) { // won't add sign if there is already a sign in last index of the input
+        // do nothing
+    } else if (input.innerHTML.indexOf('<') != -1) { // won't add sign if there is a square sign in the expression
+        // do nothing
+    } else if (input.innerHTML.indexOf('√') != -1) { // won't add sign if there is already a square root in the expression
         // do nothing
     } else if (checkOperation() == true) { // evaluates expressiong and add sign
         input.innerHTML = evaluateReturn() + sign
