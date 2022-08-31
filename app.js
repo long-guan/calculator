@@ -137,7 +137,12 @@ zero.addEventListener('click', function() {
 
 const decimal = document.querySelector("#decimal");
 decimal.addEventListener('click', function() {
-    input.innerHTML = input.innerHTML + ".";
+    if (input.innerHTML.slice(-1) == '.') {
+        // do nothing
+    } else {
+        input.innerHTML = input.innerHTML + ".";
+    }
+
 })
 
 const clear = document.querySelector("#clear");
@@ -152,7 +157,13 @@ plus.addEventListener('click', function() {
 })
 
 const equal = document.querySelector("#equal");
-equal.addEventListener('click', evaluate);
+equal.addEventListener('click', function() {
+    if (checkSkip() == true) { // does not evaluate if expression is missing number
+        // do nothing;
+    } else {
+        evaluate();
+    }
+});
 
 const input = document.querySelector("#input");
 const output = document.querySelector("#output");
@@ -217,41 +228,44 @@ function add() {
     let plusSignIndex = input.innerHTML.indexOf('+');
     let num1 = input.innerHTML.slice(0, plusSignIndex);
     let num2 = input.innerHTML.slice(plusSignIndex + 1)
-    return parseInt(num1) + parseInt(num2);
+    console.log(num1);
+    console.log(num2);
+    return parseFloat(num1) + parseFloat(num2);
 }
 
 function subtract() {
     let minusSignIndex = input.innerHTML.indexOf('−');
     let num1 = input.innerHTML.slice(0, minusSignIndex);
     let num2 = input.innerHTML.slice(minusSignIndex + 1)
-    return parseInt(num1) - parseInt(num2);
+    return parseFloat(num1) - parseFloat(num2);
 }
 
 function multiplication() {
     let minusSignIndex = input.innerHTML.indexOf('x');
     let num1 = input.innerHTML.slice(0, minusSignIndex);
     let num2 = input.innerHTML.slice(minusSignIndex + 1)
-    return parseInt(num1) * parseInt(num2);
+    return parseFloat(num1) * parseFloat(num2);
 }
 
 function division() {
     let minusSignIndex = input.innerHTML.indexOf('÷');
     let num1 = input.innerHTML.slice(0, minusSignIndex);
     let num2 = input.innerHTML.slice(minusSignIndex + 1)
-    return parseInt(num1) / parseInt(num2);
+    return parseFloat(num1) / parseFloat(num2);
 }
 
 function squareRoot() {
     if (checkOperation() == false) { // if square rooting a single number
         let num1 = input.innerHTML.slice(1, (input.innerHTML.length));
-        return Math.sqrt(parseInt(num1));
+        console.log(num1);
+        return Math.sqrt(parseFloat(num1));
     }
 }
 
 function squareNum() {
     let num = input.innerHTML.slice(0, input.innerHTML.indexOf("<"));
     console.log(num);
-    return parseInt(num) * parseInt(num);
+    return parseFloat(num) * parseFloat(num);
 }
 
 // adds sign
